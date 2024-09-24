@@ -9,7 +9,7 @@ import { interpolateBlues } from 'd3-scale-chromatic';  // Import color interpol
 function App() {
   const graphRef = useRef();
 
-  const [graphData, setGraphData] = useState({
+  const graphData = {
     nodes: [
       { id: 'Sales insights', group: 1},
       { id: 'Schedule', group: 1},
@@ -128,7 +128,7 @@ function App() {
       { source: 'CPU sales report', target: 'Invoices' },
       { source: 'CPU sales report', target: 'CPU orders' },
     ],
-  });
+  };
 
   // Function to calculate the number of connections for each node
   const calculateNodeDegree = (node, links) => {
