@@ -149,7 +149,8 @@ function App() {
 
     // Create a sphere geometry for the node
     const sphereGeometry = new THREE.SphereGeometry(size); // use size calculated above
-    console.log(size);
+    console.log("Size:" + size);
+    console.log("Node degree:" + nodeDegree);
     const sphereMaterial = new THREE.MeshBasicMaterial({
       color: new THREE.Color(colorScale(nodeDegree)) // Apply gradient color based on degree
     });
