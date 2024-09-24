@@ -139,7 +139,7 @@ function App() {
 
   // Create a color scale for gradient (from blue to red)
   const colorScale = d3.scaleSequential(interpolateBlues)
-    .domain([1, 5]);  // Assume degree range is between 1 and 5
+    .domain([1, 5]);  // Assume degree range is between 1 and 5, can change later
 
   // Function to create a custom 3D node (both a sphere and text label)
   const createNodeObject = (node) => {
