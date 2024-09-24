@@ -145,7 +145,7 @@ function App() {
   const createNodeObject = (node) => {
 
     const nodeDegree = calculateNodeDegree(node, graphData.links);
-    const size = Math.max(1, nodeDegree * 1.5); // Minimum size 5, increases with degree
+    const size = Math.max(1, nodeDegree * 1.55); // Minimum size 5, increases with degree
 
     // Create a sphere geometry for the node
     const sphereGeometry = new THREE.SphereGeometry(size); // use size calculated above
