@@ -2,7 +2,7 @@
   "name": "ia-graph",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://kochajkiewicz.github.io/my-force-graph-app",
+  "homepage": "https://kochajkiewicz.github.io/ia-graph",
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
