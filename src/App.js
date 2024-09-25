@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { ForceGraph3D } from 'react-force-graph';
 import * as THREE from 'three';  // Import THREE.js for the basic node shapes
 import SpriteText from 'three-spritetext'; // Correct import for SpriteText
@@ -142,35 +142,41 @@ function App() {
     .domain([1, 5]);  // Assume degree range is between 1 and 5, can change later
 
   // Function to create a custom 3D node (both a sphere and text label)
-  const createNodeObject = (node) => {
+  useEffect(() => {
+    if (graphData && graphData.nodes && graphData.links) {
 
-    const nodeDegree = calculateNodeDegree(node, graphData.links);
-    const size = Math.max(1, nodeDegree * 1.55); // Minimum size 5, increases with degree
+      const createNodeObject = (node) => {
 
-    // Create a sphere geometry for the node
-    const sphereGeometry = new THREE.SphereGeometry(size); // use size calculated above
-    console.log("Size:" + size);
-    console.log("Node degree:" + nodeDegree);
-    const sphereMaterial = new THREE.MeshBasicMaterial({
-      color: new THREE.Color(colorScale(nodeDegree)) // Apply gradient color based on degree
-    });
-    const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+        const nodeDegree = calculateNodeDegree(node, graphData.links);
+        const size = Math.max(1, nodeDegree * 1.55); // Minimum size 5, increases with degree
 
-    // Create the text label
-    const nodeLabel = new SpriteText(node.id);
-    nodeLabel.color = 'white';
-    nodeLabel.textHeight = 5;
+        // Create a sphere geometry for the node
+        const sphereGeometry = new THREE.SphereGeometry(size); // use size calculated above
+        console.log("Size:" + size);
+        console.log("Node degree:" + nodeDegree);
+        const sphereMaterial = new THREE.MeshBasicMaterial({
+          color: new THREE.Color(colorScale(nodeDegree)) // Apply gradient color based on degree
+        });
+        const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
 
-    // Create a group to combine the node and the label
-    const group = new THREE.Group();
-    group.add(sphere);  // Add sphere (node)
-    group.add(nodeLabel);  // Add text label
+        // Create the text label
+        const nodeLabel = new SpriteText(node.id);
+        nodeLabel.color = 'white';
+        nodeLabel.textHeight = 5;
 
-    // Adjust the label's position so it doesn't overlap the node
-    nodeLabel.position.set(-3, 1.5* size, 5); // Offset the label slightly above the node
+        // Create a group to combine the node and the label
+        const group = new THREE.Group();
+        group.add(sphere);  // Add sphere (node)
+        group.add(nodeLabel);  // Add text label
 
-    return group;
-  };
+        // Adjust the label's position so it doesn't overlap the node
+        nodeLabel.position.set(-3, 1.5* size, 5); // Offset the label slightly above the node
+
+        return group;
+      };
+
+    }
+    }, [graphData]);
 
   return (
     <div style={{ height: '100vh' }}>
