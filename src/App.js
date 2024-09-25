@@ -168,7 +168,7 @@ function App() {
     const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
 
     // Create the text label
-    const nodeLabel = new SpriteText(node.id);
+    const nodeLabel = new SpriteText(node.id + " (" + nodeDegree + ")");
     nodeLabel.color = 'white';
     nodeLabel.textHeight = 5;
 
