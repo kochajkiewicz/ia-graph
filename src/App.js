@@ -130,10 +130,14 @@ function App() {
     ],
   };
 
-  // Function to calculate the number of connections for each node
+  // Define the nodeDegree function outside of useEffect
   const calculateNodeDegree = (node, links) => {
+    if (!links || links.length === 0) return 0;
+
     return links.reduce((count, link) => {
-      return count + (link.source.id === node.id || link.target.id === node.id ? 1 : 0);
+      const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
+      const targetId = typeof link.target === 'object' ? link.target.id : link.target;
+      return count + (sourceId === node.id || targetId === node.id ? 1 : 0);
     }, 0);
   };
 
@@ -141,42 +145,45 @@ function App() {
   const colorScale = d3.scaleSequential(interpolateBlues)
     .domain([1, 5]);  // Assume degree range is between 1 and 5, can change later
 
-  // Function to create a custom 3D node (both a sphere and text label)
+  // Use useEffect to trigger degree calculation when graphData is ready
   useEffect(() => {
     if (graphData && graphData.nodes && graphData.links) {
-
-      const createNodeObject = (node) => {
-
-        const nodeDegree = calculateNodeDegree(node, graphData.links);
-        const size = Math.max(1, nodeDegree * 1.55); // Minimum size 5, increases with degree
-
-        // Create a sphere geometry for the node
-        const sphereGeometry = new THREE.SphereGeometry(size); // use size calculated above
-        console.log("Size:" + size);
-        console.log("Node degree:" + nodeDegree);
-        const sphereMaterial = new THREE.MeshBasicMaterial({
-          color: new THREE.Color(colorScale(nodeDegree)) // Apply gradient color based on degree
-        });
-        const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-
-        // Create the text label
-        const nodeLabel = new SpriteText(node.id);
-        nodeLabel.color = 'white';
-        nodeLabel.textHeight = 5;
-
-        // Create a group to combine the node and the label
-        const group = new THREE.Group();
-        group.add(sphere);  // Add sphere (node)
-        group.add(nodeLabel);  // Add text label
-
-        // Adjust the label's position so it doesn't overlap the node
-        nodeLabel.position.set(-3, 1.5* size, 5); // Offset the label slightly above the node
-
-        return group;
-      };
-
+      graphData.nodes.forEach((node) => {
+        const degree = calculateNodeDegree(node, graphData.links);
+        console.log(`Node ${node.id} has ${degree} connections.`);
+      });
     }
-    }, [graphData]);
+  }, [graphData]); // Recalculate when graphData changes
+
+  const createNodeObject = (node) => {
+
+    const nodeDegree = calculateNodeDegree(node, graphData.links);
+    const size = Math.max(1, nodeDegree * 1.55); // Minimum size 5, increases with degree
+
+    // Create a sphere geometry for the node
+    const sphereGeometry = new THREE.SphereGeometry(size); // use size calculated above
+    console.log("Size:" + size);
+    console.log("Node degree:" + nodeDegree);
+    const sphereMaterial = new THREE.MeshBasicMaterial({
+      color: new THREE.Color(colorScale(nodeDegree)) // Apply gradient color based on degree
+    });
+    const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+
+    // Create the text label
+    const nodeLabel = new SpriteText(node.id);
+    nodeLabel.color = 'white';
+    nodeLabel.textHeight = 5;
+
+    // Create a group to combine the node and the label
+    const group = new THREE.Group();
+    group.add(sphere);  // Add sphere (node)
+    group.add(nodeLabel);  // Add text label
+
+    // Adjust the label's position so it doesn't overlap the node
+    nodeLabel.position.set(-3, 1.5* size, 5); // Offset the label slightly above the node
+
+    return group;
+  };
 
   return (
     <div style={{ height: '100vh' }}>
